@@ -90,6 +90,82 @@ Step-by-step tutorials in [`book/src/guides/`](../book/src/guides/):
 
 ## External Resources
 
+- **Token Operations**
+  - [Token Basics](../examples/tokens/)
+  - [Token Wrapper](../examples/intermediate/)
+  - [Custom Token](../examples/tokens/)
+
+- **Storage & Data**
+  - [Storage Types](./storage-types.md) - Comparison and usage
+  - [Basic Storage Patterns](../examples/basics/02-storage-patterns/)
+  - [Detailed Instance Storage](../examples/basics/instance-storage/)
+  - [Data Structures](../examples/intermediate/)
+  - [Efficient Storage](../examples/advanced/)
+
+- **Financial Operations**
+  - [Simple Swap](../examples/defi/)
+  - [Lending Pool](../examples/defi/)
+  - [AMM](../examples/defi/)
+  - [Yield Vault](../examples/defi/)
+
+## 🛠️ Tools & Utilities
+
+### Development Scripts
+
+- **[build.sh](../scripts/build.sh)** - Build contracts
+- **[test.sh](../scripts/test.sh)** - Run tests with options
+- **[deploy.sh](../scripts/deploy.sh)** - Deploy to networks
+
+### Testing Tools
+
+- Mock environments
+- Authorization mocking
+- Time manipulation
+- Event inspection
+
+### Deployment Tools
+
+- Network configuration
+- Identity management
+- Fee estimation
+- Contract verification
+
+## 📖 Guides & Tutorials
+
+### Step-by-Step Guides
+
+1. [Getting Started](../guides/getting-started.md)
+2. [Testing Guide](../guides/testing.md)
+3. [Deployment Guide](../guides/deployment.md)
+4. [Ethereum to Soroban](../guides/ethereum-to-soroban.md)
+
+### Topic-Specific Guides
+
+- Storage optimization
+- Gas efficiency
+- Security auditing
+- Upgrade patterns
+
+## 🤝 Community Resources
+
+### Getting Help
+
+- [Stellar Discord](https://discord.gg/stellardev) - Live chat
+- [Stack Exchange](https://stellar.stackexchange.com/) - Q&A
+- [GitHub Discussions](https://github.com/Soroban-Cookbook/Soroban-Cookbook/discussions)
+- [Forum](https://stellar.org/community)
+
+### Contributing
+
+- [Contributing Guide](../CONTRIBUTING.md) - How to contribute
+- [Code of Conduct](../CODE_OF_CONDUCT.md) - Community guidelines
+- [Issue Templates](../.github/ISSUE_TEMPLATE/) - Report issues
+- [Pull Request Template](../.github/PULL_REQUEST_TEMPLATE.md)
+
+## 🔗 External Resources
+
+### Official Documentation
+
 - [Soroban Documentation](https://developers.stellar.org/docs/smart-contracts)
 - [Soroban Rust SDK](https://docs.rs/soroban-sdk/)
 - [Stellar Developer Portal](https://developers.stellar.org/)
