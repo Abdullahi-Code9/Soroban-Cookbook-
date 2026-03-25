@@ -467,10 +467,8 @@ fn test_transfer_missing_auth() {
     let to = Address::generate(&env);
 
     client.set_balance(&admin, &from, &1000);
-
     // Disable all-auth-mocking and provide nothing, forcing an auth failure
     env.mock_auths(&[]);
-    
     client.transfer(&from, &to, &300);
 }
 
@@ -483,10 +481,8 @@ fn test_approve_missing_auth() {
     let spender = Address::generate(&env);
 
     client.set_balance(&admin, &owner, &1000);
-
     // Disable all-auth-mocking
     env.mock_auths(&[]);
-    
     client.approve(&owner, &spender, &500);
 }
 
@@ -528,7 +524,6 @@ fn test_multi_sig_missing_one_auth() {
     let env = Env::default();
     let contract_id = env.register_contract(None, AuthContract);
     let client = AuthContractClient::new(&env, &contract_id);
-    
     let signers = vec![
         &env,
         Address::generate(&env),
