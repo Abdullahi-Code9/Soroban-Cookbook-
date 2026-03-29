@@ -21,9 +21,24 @@ for signer in signers.iter() {
 
 **Checklist:** [CHECKLIST.md](../examples/intermediate/multi-sig-patterns/CHECKLIST.md)
 
----
+### Ajo Factory [./ajo-factory/](../examples/intermediate/ajo-factory/)
+**Contract deployment from within a contract.** Spawn isolated instances from Wasm hash.
 
-**[More coming...]** Token ops, factories, proxies.
+**Key Concepts:**
+- `env.deployer()`
+- Wasm Hash storage
+- Salted address derivation
+- Initialization guard
+
+**Quick Code:**
+```rust
+let address = env.deployer()
+    .with_current_contract(salt)
+    .deploy(wasm_hash);
+AjoClient::new(&env, &address).initialize(...);
+```
+
+---
 
 ## Prerequisites
 - [Basics](../basics.md)
