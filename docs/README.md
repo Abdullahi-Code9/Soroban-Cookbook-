@@ -29,6 +29,15 @@ Welcome to the Soroban Cookbook documentation. This page gathers quick links, re
 - [Dependabot Setup](./dependabot-setup.md) — Automated dependency update configuration
 - [Performance Benchmarks](./benchmarks.md) — Resource usage comparison and optimization tips
 
+### 🎬 Video Walkthrough
+
+> **Getting Started — Examples 01–03** *(coming soon)*
+> A 10–15 minute video covering Hello World, Storage Patterns, and Custom Errors.
+> Once published it will be linked here and in each example's README.
+> See [`docs/video-script-getting-started.md`](./video-script-getting-started.md) for the full script and YouTube metadata.
+
+## 🎓 Learning Paths
+
 ### Architecture Decision Records
 
 - [ADR-001: Record Architecture Decisions](./adr/001-record-architecture-decisions.md)
