@@ -44,6 +44,22 @@ fn test_divide_large_numbers() {
 }
 
 #[test]
+fn test_divide_checked_returns_domain_error() {
+    assert_eq!(
+        ErrorHandlingContract::divide_checked(10, 0),
+        Err(MathError::DivisionByZero)
+    );
+}
+
+#[test]
+fn test_divide_with_conversion_maps_error_to_contract_error() {
+    assert_eq!(
+        ErrorHandlingContract::divide_with_conversion(10, 0),
+        Err(Error::InvalidAmount)
+    );
+}
+
+#[test]
 fn test_get_verified_state_valid() {
     let env = Env::default();
     let contract_id = env.register_contract(None, ErrorHandlingContract);
@@ -232,6 +248,18 @@ fn test_cascading_error_handling() {
     };
 
     assert_eq!(final_result, Ok(25));
+}
+
+#[test]
+fn test_error_bubbling_with_question_operator() {
+    fn settle_then_split(amount: u64, balance: u64, divisor: i128) -> Result<i128, Error> {
+        let remaining = ErrorHandlingContract::transfer(amount, balance)?;
+        ErrorHandlingContract::divide_with_conversion(remaining as i128, divisor)
+    }
+
+    assert_eq!(settle_then_split(40, 100, 2), Ok(30));
+    assert_eq!(settle_then_split(0, 100, 2), Err(Error::InvalidAmount));
+    assert_eq!(settle_then_split(40, 100, 0), Err(Error::InvalidAmount));
 }
 
 #[test]

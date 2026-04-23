@@ -28,21 +28,44 @@ pub enum Error {
     Unauthorized = 3,
 }
 
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[repr(u32)]
+pub enum MathError {
+    DivisionByZero = 10,
+}
+
+impl From<MathError> for Error {
+    fn from(value: MathError) -> Self {
+        match value {
+            MathError::DivisionByZero => Error::InvalidAmount,
+        }
+    }
+}
+
 #[contract]
 pub struct ErrorHandlingContract;
 
 #[contractimpl]
 impl ErrorHandlingContract {
-    /// ✅ GOOD: Use Result for expected validation failures
-    /// Returns error for invalid input - caller can handle gracefully
-    pub fn transfer(amount: u64, balance: u64) -> Result<u64, Error> {
+    fn validate_transfer(amount: u64, balance: u64) -> Result<(), Error> {
         if amount == 0 {
             return Err(Error::InvalidAmount);
         }
         if amount > balance {
             return Err(Error::InsufficientBalance);
         }
-        Ok(balance - amount)
+        Ok(())
+    }
+
+    fn subtract_balance(amount: u64, balance: u64) -> Result<u64, Error> {
+        balance.checked_sub(amount).ok_or(Error::InvalidAmount)
+    }
+
+    /// ✅ GOOD: Use Result for expected validation failures
+    /// Returns error for invalid input - caller can handle gracefully
+    pub fn transfer(amount: u64, balance: u64) -> Result<u64, Error> {
+        Self::validate_transfer(amount, balance)?;
+        Self::subtract_balance(amount, balance)
     }
 
     /// ❌ BAD: Panic for expected validation (anti-pattern)
@@ -71,10 +94,20 @@ impl ErrorHandlingContract {
     /// ✅ GOOD: Result for business logic errors
     /// Division by zero is expected user error, not a bug
     pub fn divide(a: i128, b: i128) -> Result<i128, Error> {
+        Ok(Self::divide_checked(a, b).map_err(Error::from)?)
+    }
+
+    /// Core division operation returning a domain-specific error type.
+    fn divide_checked(a: i128, b: i128) -> Result<i128, MathError> {
         if b == 0 {
-            return Err(Error::InvalidAmount);
+            return Err(MathError::DivisionByZero);
         }
         Ok(a / b)
+    }
+
+    /// Converts lower-level math errors into contract-level errors.
+    pub fn divide_with_conversion(a: i128, b: i128) -> Result<i128, Error> {
+        Ok(Self::divide_checked(a, b).map_err(Error::from)?)
     }
 }
 
