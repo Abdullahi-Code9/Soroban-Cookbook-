@@ -489,10 +489,9 @@ impl CustomStructsContract {
         };
 
         // Store the portfolio
-        env.storage().instance().set(
-            &(symbol_short!("portfolio"), owner, name),
-            &portfolio,
-        );
+        env.storage()
+            .instance()
+            .set(&(symbol_short!("portfolio"), owner, name), &portfolio);
 
         Ok(portfolio)
     }
@@ -606,10 +605,9 @@ impl CustomStructsContract {
         };
 
         // Store extended profile
-        env.storage().instance().set(
-            &(symbol_short!("ext_prof"), address),
-            &extended_profile,
-        );
+        env.storage()
+            .instance()
+            .set(&(symbol_short!("ext_prof"), address), &extended_profile);
 
         Ok(extended_profile)
     }
