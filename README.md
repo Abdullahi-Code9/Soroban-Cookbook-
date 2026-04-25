@@ -172,6 +172,7 @@ Step-by-step tutorials in the [book](./book/src/guides/):
 Reference docs in [docs/](./docs/):
 
 - [Best Practices](./docs/best-practices.md) — Security, storage, and code quality guidelines
+- [Style Guide](./docs/style-guide.md) — Naming, documentation, and testing standards
 - [Quick Reference](./docs/quick-reference.md) — Cheat sheet for common patterns
 - [Glossary](./docs/glossary.md) — Key terms and concepts
 

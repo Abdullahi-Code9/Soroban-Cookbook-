@@ -15,11 +15,13 @@ Welcome to the Soroban Cookbook documentation. Use this index to find what you n
 | Look up a term              | [Glossary](./glossary.md)                                    |
 | See common patterns         | [Common Patterns](./common-patterns.md)                      |
 | Check best practices        | [Best Practices](./best-practices.md)                        |
+| Follow style guide          | [Style Guide](./style-guide.md)                              |
 | Get a cheat sheet           | [Quick Reference](./quick-reference.md)                      |
 
 ## Reference Documentation
 
 - [Best Practices](./best-practices.md) — Security, storage, and code quality guidelines
+- [Style Guide](./style-guide.md) — Naming, documentation, and testing standards
 - [Quick Reference](./quick-reference.md) — Cheat sheet for common Soroban patterns
 - [Common Patterns](./common-patterns.md) — Reusable patterns with when-to-use guidance
 - [Glossary](./glossary.md) — Key terms and concepts

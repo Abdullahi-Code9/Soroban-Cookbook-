@@ -56,20 +56,15 @@ cd Soroban-Cookbook-
 cargo test --workspace
 For more detailed setup, see the Getting Started Guide.
 
-📝 Code Style Guidelines
-To maintain a consistent and high-quality codebase, please follow these guidelines:
+To maintain a consistent and high-quality codebase, please follow our [Style Guide](./docs/style-guide.md).
 
-Naming: Follow standard Rust naming conventions.
-
-Formatting: Always run cargo fmt before committing.
-
-Linting: Ensure cargo clippy passes with no warnings (-D warnings).
-
-Error Handling: Use custom errors with #[contracterror] for meaningful error messages.
-
-Comments: Use /// for documentation comments and // for internal logic explanation.
-
-No-std: All contract code must be #![no_std].
+Key highlights:
+- **Naming**: Follow standard [Rust naming conventions](https://rust-lang.github.io/api-guidelines/naming.html) and our specific contract patterns.
+- **Formatting**: Always run `cargo fmt` before committing.
+- **Linting**: Ensure `cargo clippy` passes with no warnings (`-D warnings`).
+- **Documentation**: Use `///` for public interface docs and `//!` for module-level explanations.
+- **Testing**: Every example must include comprehensive unit tests.
+- **No-std**: All contract code must be `#![no_std]`.
 
 🏗️ Project Structure
 examples/: Categorized smart contract examples.
