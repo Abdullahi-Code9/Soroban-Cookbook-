@@ -25,6 +25,7 @@
 
 #![no_std]
 use soroban_sdk::{contract, contracterror, contractimpl, contracttype, Address, Env, String, Vec};
+use soroban_validation::*;
 
 // ---------------------------------------------------------------------------
 // Error Types
@@ -177,21 +178,8 @@ impl ValidationContract {
         min_amount: i128,
         max_amount: i128,
     ) -> Result<(), ValidationError> {
-        // Basic amount validation
-        if amount <= 0 {
-            return Err(ValidationError::InvalidAmount);
-        }
-
-        // Range validation
-        if amount < min_amount {
-            return Err(ValidationError::AmountTooSmall);
-        }
-
-        if amount > max_amount {
-            return Err(ValidationError::AmountTooLarge);
-        }
-
-        Ok(())
+        // Use shared validation function
+        validate_amount(amount, min_amount, max_amount)
     }
 
     /// Example of string parameter validation
@@ -210,23 +198,8 @@ impl ValidationContract {
         min_length: u32,
         max_length: u32,
     ) -> Result<(), ValidationError> {
-        let length = text.len();
-
-        // Length validation
-        if length < min_length {
-            return Err(ValidationError::StringTooShort);
-        }
-
-        if length > max_length {
-            return Err(ValidationError::StringTooLong);
-        }
-
-        // Content validation (example: no empty strings)
-        if length == 0 {
-            return Err(ValidationError::InvalidString);
-        }
-
-        Ok(())
+        // Use shared validation function
+        validate_string(text, min_length, max_length)
     }
 
     /// Example of address parameter validation
@@ -236,11 +209,9 @@ impl ValidationContract {
     ///
     /// # Errors
     /// * `ValidationError::InvalidAddress` - If address is invalid
-    pub fn validate_address(_address: Address) -> Result<(), ValidationError> {
-        // In Soroban, addresses are always valid if they exist
-        // This is a placeholder for more complex address validation
-        // such as checking against a blacklist or whitelist
-        Ok(())
+    pub fn validate_address(address: Address) -> Result<(), ValidationError> {
+        // Use shared validation function
+        validate_address(address)
     }
 
     /// Example of array parameter validation
@@ -258,17 +229,8 @@ impl ValidationContract {
         min_size: u32,
         max_size: u32,
     ) -> Result<(), ValidationError> {
-        let size = array.len();
-
-        if size < min_size {
-            return Err(ValidationError::ArrayTooSmall);
-        }
-
-        if size > max_size {
-            return Err(ValidationError::ArrayTooLarge);
-        }
-
-        Ok(())
+        // Use shared validation function
+        validate_array(array, min_size, max_size)
     }
 
     /// Example of timestamp parameter validation
@@ -288,19 +250,8 @@ impl ValidationContract {
         allow_past: bool,
         max_future_seconds: u64,
     ) -> Result<(), ValidationError> {
-        let current_time = env.ledger().timestamp();
-
-        // Check if timestamp is in the past (when not allowed)
-        if !allow_past && timestamp < current_time {
-            return Err(ValidationError::TimestampInPast);
-        }
-
-        // Check if timestamp is too far in the future
-        if timestamp > current_time + max_future_seconds {
-            return Err(ValidationError::TimestampInDistantFuture);
-        }
-
-        Ok(())
+        // Use shared validation function
+        validate_timestamp(env, timestamp, allow_past, max_future_seconds)
     }
 
     // ==================== STATE VALIDATION EXAMPLES ====================
@@ -367,11 +318,8 @@ impl ValidationContract {
             .get(&DataKey::Balance(address.clone()))
             .unwrap_or(0);
 
-        if balance < required_amount {
-            return Err(ValidationError::InsufficientBalance);
-        }
-
-        Ok(())
+        // Use shared validation pattern
+        require_sufficient_balance(balance, required_amount)
     }
 
     /// Example of allowance validation
@@ -422,14 +370,11 @@ impl ValidationContract {
             .persistent()
             .get::<DataKey, u64>(&DataKey::LastAction(address.clone()))
         {
-            let current_time = env.ledger().timestamp();
-
-            if current_time < last_action + cooldown_seconds {
-                return Err(ValidationError::CooldownActive);
-            }
+            // Use shared validation pattern
+            require_cooldown_expired(env, last_action, cooldown_seconds)
+        } else {
+            Ok(())
         }
-
-        Ok(())
     }
 
     // ==================== AUTHORIZATION VALIDATION EXAMPLES ====================
@@ -452,13 +397,11 @@ impl ValidationContract {
         required_role: UserRole,
     ) -> Result<(), ValidationError> {
         // Check if address is blacklisted
-        if env
+        let is_blacklisted = env
             .storage()
             .instance()
-            .has(&DataKey::Blacklist(address.clone()))
-        {
-            return Err(ValidationError::Blacklisted);
-        }
+            .has(&DataKey::Blacklist(address.clone()));
+        require_not_blacklisted(is_blacklisted)?;
 
         // Get user role
         let user_role: UserRole = env
@@ -467,10 +410,8 @@ impl ValidationContract {
             .get(&DataKey::UserRole(address.clone()))
             .unwrap_or(UserRole::None);
 
-        // Check role hierarchy
-        if user_role < required_role {
-            return Err(ValidationError::InsufficientRole);
-        }
+        // Use shared validation pattern for role comparison
+        require_role(user_role, required_role)?;
 
         // Special checks for owner and admin
         match required_role {
@@ -501,11 +442,8 @@ impl ValidationContract {
             .get(&DataKey::Owner)
             .ok_or(ValidationError::ContractNotInitialized)?;
 
-        if address != owner {
-            return Err(ValidationError::NotOwner);
-        }
-
-        Ok(())
+        // Use shared validation pattern
+        require_owner(owner, address)
     }
 
     /// Example of admin validation
@@ -523,11 +461,8 @@ impl ValidationContract {
             .get(&DataKey::Admin)
             .ok_or(ValidationError::ContractNotInitialized)?;
 
-        if address != admin {
-            return Err(ValidationError::NotAdmin);
-        }
-
-        Ok(())
+        // Use shared validation pattern
+        require_admin(admin, address)
     }
 
     // ==================== COMBINED VALIDATION EXAMPLES ====================
