@@ -4,6 +4,7 @@
 
 [![CI](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/ci.yml/badge.svg)](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/ci.yml)
 [![Test and Lint](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/test.yml/badge.svg)](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/test.yml)
+[![Security Audit](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/security-audit.yml/badge.svg)](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/security-audit.yml)
 [![codecov](https://codecov.io/gh/Soroban-Cookbook/Soroban-Cookbook-/branch/main/graph/badge.svg)](https://codecov.io/gh/Soroban-Cookbook/Soroban-Cookbook-)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -16,13 +17,22 @@
 - [Examples](#examples)
 - [Guides](#guides)
 - [Documentation](#documentation)
+- [Web Application](#web-application)
 - [Contributing](#contributing)
 - [Additional Resources](#additional-resources)
 - [License](#license)
 
 ## Project Overview and Goals
 
-The Soroban Cookbook is a community-driven developer resource for building smart contracts on the [Stellar](https://stellar.org) network using [Soroban](https://developers.stellar.org/docs/smart-contracts). It provides clear, well-documented examples and practical patterns for developers at every level — from a first "Hello World" contract to production-grade DeFi protocols.
+The Soroban Cookbook is a community-driven developer resource for building smart contracts on the [Stellar](https://stellar.org) network using [Soroban](https://developers.stellar.org/docs/smart-contracts). It provides clear, well-documented examples and practical patterns for developers at every level — from a first "Hello World" contract to production-grade DeFi protocols
+
+## Project Goals
+
+- Make Soroban contract development easier by providing concrete, real-world examples to the problems
+- Teach safe Soroban and Rust patterns through documentation and tests
+- Support beginners and advanced developers with clearly organized examples
+- Keep repository examples current with Stellar and Soroban tooling
+- Maintain high-quality CI, build, and test coverage for every contribution
 
 Every example in this cookbook:
 
@@ -108,6 +118,8 @@ Soroban-Cookbook/
 │       ├── examples/       # Example write-ups
 │       └── docs/           # Reference documentation
 ├── docs/                   # Supplementary reference docs
+├── webapp/                 # Next.js web application for interactive examples
+├── scripts/                # Build and deployment scripts
 └── .github/                # CI/CD workflows and templates
 ```
 
@@ -177,10 +189,27 @@ Step-by-step tutorials in the [book](./book/src/guides/):
 Reference docs in [docs/](./docs/):
 
 - [Best Practices](./docs/best-practices.md) — Security, storage, and code quality guidelines
+- [Style Guide](./docs/style-guide.md) — Naming, documentation, and testing standards
 - [Quick Reference](./docs/quick-reference.md) — Cheat sheet for common patterns
 - [Glossary](./docs/glossary.md) — Key terms and concepts
 
 The full documentation site is built with [mdBook](https://rust-lang.github.io/mdBook/) and deployed to GitHub Pages on every push to `main`.
+
+## Web Application
+
+An interactive web application built with Next.js to explore and run Soroban contract examples directly in your browser.
+
+- Located in [webapp/](./webapp/)
+- Built with Next.js, React, and TypeScript
+- Provides a playground for testing contracts
+
+To run the webapp locally:
+
+```bash
+cd webapp
+npm install
+npm run dev
+```
 
 ## Contributing
 
@@ -215,4 +244,4 @@ This project is licensed under the MIT License — see the [LICENSE](./LICENSE) 
 
 ---
 
-Built by the community · Powered by Stellar · Written in Rust
+Built by the community · Powered by Stellar · Written in Rust.
