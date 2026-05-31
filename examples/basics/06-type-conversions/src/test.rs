@@ -10,9 +10,9 @@ use soroban_sdk::{
     Vec,
 };
 
-fn setup(env: &Env) -> TypeConversionsContractClient {
-    let id = env.register_contract(None, TypeConversionsContract);
-    TypeConversionsContractClient::new(env, &id)
+fn setup(env: &Env) -> ConversionContractClient {
+    let id = env.register_contract(None, ConversionContract);
+    ConversionContractClient::new(env, &id)
 }
 
 // ── convert_numbers ───────────────────────────────────────────────────────────
@@ -20,8 +20,8 @@ fn setup(env: &Env) -> TypeConversionsContractClient {
 #[test]
 fn test_convert_numbers_success() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     assert_eq!(client.convert_numbers(&42i128, &1u32), 42);
     assert_eq!(client.convert_numbers(&-1000i128, &2u32), -1000);
@@ -31,8 +31,8 @@ fn test_convert_numbers_success() {
 #[test]
 fn test_convert_numbers_overflow() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let result = client.try_convert_numbers(&i128::MAX, &1u32);
     assert!(result.is_err());
@@ -41,8 +41,8 @@ fn test_convert_numbers_overflow() {
 #[test]
 fn test_convert_numbers_negative_to_unsigned() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let result = client.try_convert_numbers(&-100i128, &3u32);
     assert!(result.is_err());
@@ -51,8 +51,8 @@ fn test_convert_numbers_negative_to_unsigned() {
 #[test]
 fn test_convert_numbers_unsupported_type() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let result = client.try_convert_numbers(&42i128, &99u32);
     assert!(result.is_err());
@@ -63,8 +63,8 @@ fn test_convert_numbers_unsupported_type() {
 #[test]
 fn test_convert_strings_to_symbol() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let input = String::from_str(&env, "hello");
     let (string_result, symbol_result) = client.convert_strings(&input, &true);
@@ -78,8 +78,14 @@ fn test_convert_strings_to_symbol() {
 #[test]
 fn test_convert_strings_from_symbol() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
+
+    let input = String::from_str(&env, "hello");
+    let (s, sym) = client.convert_strings(&input, &true);
+    assert_eq!(s, input);
+    assert_eq!(sym, Symbol::new(&env, "hello"));
+}
 
     let input = String::from_str(&env, "hello");
     let (s, _) = client.convert_strings(&input, &false);
@@ -94,8 +100,6 @@ fn test_convert_strings_too_long() {
     let long = String::from_str(&env, "this_string_is_thirty_three_chars_!");
     setup(&env).convert_strings(&long, &true);
 }
-
-// ── convert_collections ───────────────────────────────────────────────────────
 
 #[test]
 fn test_convert_collections() {
@@ -124,8 +128,8 @@ fn test_convert_collections_empty() {
 #[test]
 fn test_safe_conversions_success() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let val: Val = 42u32.into_val(&env);
     let (success, result) = client.safe_conversions(&val, &1u32);
@@ -151,8 +155,8 @@ fn test_safe_conversions_success() {
 #[test]
 fn test_safe_conversions_type_mismatch() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let val: Val = String::from_str(&env, "not_a_number").into_val(&env);
     let (success, result) = client.safe_conversions(&val, &1u32);
@@ -169,8 +173,8 @@ fn test_safe_conversions_type_mismatch() {
 #[test]
 fn test_create_user_data_success() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let name = String::from_str(&env, "alice");
     let user_data = client.create_user_data(&1u64, &name, &1000i128, &true);
@@ -184,8 +188,8 @@ fn test_create_user_data_success() {
 #[test]
 fn test_create_user_data_name_too_long() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let long_name = String::from_str(
         &env,
@@ -198,8 +202,8 @@ fn test_create_user_data_name_too_long() {
 #[test]
 fn test_create_user_data_negative_balance() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let name = String::from_str(&env, "alice");
     let result = client.try_create_user_data(&1u64, &name, &-100i128, &true);
@@ -211,8 +215,8 @@ fn test_create_user_data_negative_balance() {
 #[test]
 fn test_convert_val_to_config() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     let mut features = Vec::new(&env);
@@ -235,8 +239,8 @@ fn test_convert_val_to_config() {
 #[test]
 fn test_convert_val_to_config_missing_field() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let mut val_data = Map::new(&env);
     val_data.set(Symbol::new(&env, "max_users"), 100u32.into_val(&env));
@@ -250,8 +254,8 @@ fn test_convert_val_to_config_missing_field() {
 #[test]
 fn test_convert_bytes_to_types() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let input_str = "hello_world";
     let input_bytes = Bytes::from_slice(&env, input_str.as_bytes());
@@ -268,8 +272,8 @@ fn test_convert_bytes_to_types() {
 #[test]
 fn test_validate_and_convert_number() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let input = String::from_str(&env, "12345");
     let result = client.validate_and_convert(&input, &1u32);
@@ -279,8 +283,8 @@ fn test_validate_and_convert_number() {
 #[test]
 fn test_validate_and_convert_invalid_number() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let input = String::from_str(&env, "");
     let result = client.try_validate_and_convert(&input, &1u32);
@@ -290,8 +294,8 @@ fn test_validate_and_convert_invalid_number() {
 #[test]
 fn test_validate_and_convert_symbol() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let input = String::from_str(&env, "valid_symbol");
     let result = client.validate_and_convert(&input, &2u32);
@@ -301,8 +305,8 @@ fn test_validate_and_convert_symbol() {
 #[test]
 fn test_validate_and_convert_symbol_too_long() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let input = String::from_str(&env, "this_symbol_name_is_way_too_long_to_be_valid");
     let result = client.try_validate_and_convert(&input, &2u32);
@@ -312,8 +316,8 @@ fn test_validate_and_convert_symbol_too_long() {
 #[test]
 fn test_validate_and_convert_address() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let valid_address = "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     let input = String::from_str(&env, valid_address);
@@ -324,8 +328,8 @@ fn test_validate_and_convert_address() {
 #[test]
 fn test_validate_and_convert_invalid_address() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let input = String::from_str(&env, "too_short");
     let result = client.try_validate_and_convert(&input, &3u32);
@@ -335,8 +339,8 @@ fn test_validate_and_convert_invalid_address() {
 #[test]
 fn test_validate_and_convert_unsupported_type() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let input = String::from_str(&env, "value");
     let result = client.try_validate_and_convert(&input, &99u32);
@@ -348,8 +352,8 @@ fn test_validate_and_convert_unsupported_type() {
 #[test]
 fn test_batch_convert_numbers_mixed() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let mut input_vec = Vec::new(&env);
     input_vec.push_back(String::from_str(&env, "123"));
@@ -367,8 +371,8 @@ fn test_batch_convert_numbers_mixed() {
 #[test]
 fn test_batch_convert_numbers_all_invalid() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let mut input_vec = Vec::new(&env);
     input_vec.push_back(String::from_str(&env, "invalid"));
@@ -381,8 +385,8 @@ fn test_batch_convert_numbers_all_invalid() {
 #[test]
 fn test_batch_convert_numbers_empty_input() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let input_vec: Vec<String> = Vec::new(&env);
     let result = client.batch_convert_numbers(&input_vec);
@@ -394,8 +398,8 @@ fn test_batch_convert_numbers_empty_input() {
 #[test]
 fn test_sum_different_types() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let result = client.sum_different_types(&100u32, &-50i64);
     assert_eq!(result, 50i128);
@@ -406,8 +410,8 @@ fn test_sum_different_types() {
 #[test]
 fn test_val_roundtrip() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let original = 12345u32;
     let result = client.val_roundtrip(&original);
@@ -419,8 +423,8 @@ fn test_val_roundtrip() {
 #[test]
 fn test_val_conversion_roundtrip_via_safe_conversions() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let original_value = 12345u32;
     let val: Val = original_value.into_val(&env);
@@ -433,8 +437,8 @@ fn test_val_conversion_roundtrip_via_safe_conversions() {
 #[test]
 fn test_complex_conversion_workflow() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, TypeConversionsContract);
-    let client = TypeConversionsContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, ConversionContract);
+    let client = ConversionContractClient::new(&env, &contract_id);
 
     let valid_input = String::from_str(&env, "valid");
     let result1 = client.validate_and_convert(&valid_input, &2u32);
