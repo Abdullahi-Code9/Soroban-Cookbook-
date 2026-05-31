@@ -1,13 +1,13 @@
 # Intermediate Examples
 
-This category contains examples that demonstrate common, real-world design patterns and use cases for Soroban smart contracts. These examples often combine multiple basic concepts to solve practical problems.
+This category contains examples that demonstrate common, real-world design patterns and use cases for Soroban smart contracts. These examples combine multiple basic concepts to solve practical problems and prepare you for production-grade contract development.
 
-## What's Inside?
+## 🎯 Prerequisites
 
-- **Access Control**: Implement patterns like multi-sig, Role-Based Access Control (RBAC), and timelocks.
-- **Cross-Contract Communication**: See how to build systems with factory, proxy, and registry patterns.
-- **Token Interactions**: Learn how to create contracts that interact with or wrap standard tokens.
-- **Advanced Data Structures**: Examples of iterable maps, queues, and other complex data structures.
+Before diving into intermediate examples, make sure you've completed:
+- [Basic Examples](../basics/) — Core Soroban concepts (storage, auth, errors, events)
+- [Getting Started Guide](../../book/src/guides/getting-started.md) — Development environment setup
+- [Testing Guide](../../book/src/guides/testing.md) — Unit and integration testing patterns
 
 ## Included Examples
 

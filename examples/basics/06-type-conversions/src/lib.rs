@@ -47,7 +47,7 @@ pub struct Config {
 }
 
 #[contract]
-pub struct ConversionContract;
+pub struct TypeConversionsContract;
 
 #[contractimpl]
 impl ConversionContract {
