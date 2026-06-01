@@ -153,3 +153,77 @@ fn test_get_state_unknown() {
         OperationState::Unknown
     );
 }
+
+// ---------------------------------------------------------------------------
+// Benchmarks
+// ---------------------------------------------------------------------------
+// Run with: cargo test -p timelock -- --nocapture bench
+
+#[cfg(test)]
+mod bench {
+    extern crate std;
+
+    use super::*;
+    use soroban_sdk::{
+        testutils::{Ledger},
+        Address, Bytes, Env,
+    };
+
+    fn setup_bench() -> (Env, Address, TimelockContractClient<'static>) {
+        let env = Env::default();
+        env.mock_all_auths();
+        let id = env.register_contract(None, TimelockContract);
+        let client = TimelockContractClient::new(&env, &id);
+        let admin = Address::generate(&env);
+        client.initialize(&admin);
+        (env, admin, client)
+    }
+
+    fn op(env: &Env, tag: &[u8]) -> Bytes {
+        Bytes::from_slice(env, tag)
+    }
+
+    #[test]
+    fn bench_queue() {
+        let (env, _admin, client) = setup_bench();
+        env.budget().reset_default();
+        client.queue(&op(&env, b"bench_q"), &MIN_DELAY);
+        let cpu = env.budget().cpu_instruction_cost();
+        let mem = env.budget().memory_bytes_cost();
+        std::println!("[bench] timelock::queue  cpu={cpu}  mem={mem}");
+    }
+
+    #[test]
+    fn bench_execute() {
+        let (env, _admin, client) = setup_bench();
+        client.queue(&op(&env, b"bench_e"), &MIN_DELAY);
+        env.ledger().with_mut(|l| l.timestamp += MIN_DELAY + 1);
+        env.budget().reset_default();
+        client.execute(&op(&env, b"bench_e"));
+        let cpu = env.budget().cpu_instruction_cost();
+        let mem = env.budget().memory_bytes_cost();
+        std::println!("[bench] timelock::execute  cpu={cpu}  mem={mem}");
+    }
+
+    #[test]
+    fn bench_cancel() {
+        let (env, _admin, client) = setup_bench();
+        client.queue(&op(&env, b"bench_c"), &MIN_DELAY);
+        env.budget().reset_default();
+        client.cancel(&op(&env, b"bench_c"));
+        let cpu = env.budget().cpu_instruction_cost();
+        let mem = env.budget().memory_bytes_cost();
+        std::println!("[bench] timelock::cancel  cpu={cpu}  mem={mem}");
+    }
+
+    #[test]
+    fn bench_get_state() {
+        let (env, _admin, client) = setup_bench();
+        client.queue(&op(&env, b"bench_s"), &MIN_DELAY);
+        env.budget().reset_default();
+        let _ = client.get_state(&op(&env, b"bench_s"));
+        let cpu = env.budget().cpu_instruction_cost();
+        let mem = env.budget().memory_bytes_cost();
+        std::println!("[bench] timelock::get_state  cpu={cpu}  mem={mem}");
+    }
+}
