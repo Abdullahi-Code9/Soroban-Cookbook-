@@ -26,7 +26,8 @@
 # Use Cases
 
 ## DeFi
-- [Overview & planned](./examples/defi.md)
+- [Overview](./examples/defi.md)
+- [Vault Strategies](./examples/vault-strategies.md)
 
 ## NFTs
 - [Overview & planned](./examples/nfts.md)
