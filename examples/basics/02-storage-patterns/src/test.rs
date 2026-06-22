@@ -193,19 +193,16 @@ fn test_storage_costs_benchmark() {
     let value = 100u64;
 
     // Benchmark Persistent Storage
-    println!("--- Persistent Storage Benchmark ---");
     env.budget().reset_default();
     client.set_persistent(&key, &value);
     env.budget().print();
 
     // Benchmark Instance Storage
-    println!("--- Instance Storage Benchmark ---");
     env.budget().reset_default();
     client.set_instance(&key, &value);
     env.budget().print();
 
     // Benchmark Temporary Storage
-    println!("--- Temporary Storage Benchmark ---");
     env.budget().reset_default();
     client.set_temporary(&key, &value);
     env.budget().print();

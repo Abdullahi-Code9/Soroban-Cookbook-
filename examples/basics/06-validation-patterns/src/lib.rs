@@ -437,51 +437,50 @@ impl ValidationContract {
         amount: i128,
         message: Option<String>,
     ) -> Result<(), ValidationError> {
-        // 1. Basic parameter validation
+        // 1. Parameter validation
         Self::validate_address(from.clone())?;
         Self::validate_address(to.clone())?;
-        validate_amount(amount, 1, 1_000_000)?; // Range check
+        Self::validate_amount_parameters(amount, 1, 1000000)?;
 
         if let Some(msg) = message {
             Self::validate_string_parameters(msg, 0, 100)?;
         }
 
-        // 2. State and Authorization validation
+        // 2. State validation
         Self::validate_contract_state(&env, ContractState::Active)?;
         Self::validate_balance(&env, from.clone(), amount)?;
+
+        // 3. Authorization validation
         Self::validate_role(&env, from.clone(), UserRole::User)?;
         from.require_auth();
 
-        // 3. Rate limiting and temporal validation
+        // 4. Business logic validation (cooldown, rate limiting, etc.)
         Self::validate_cooldown(&env, from.clone(), 60)?; // 1 minute cooldown
 
-        // Business logic
-        let mut from_balance: i128 = env
+        // Execute the transfer
+        let from_balance: i128 = env
             .storage()
             .persistent()
             .get(&DataKey::Balance(from.clone()))
             .unwrap_or(0);
-        let mut to_balance: i128 = env
+
+        let to_balance: i128 = env
             .storage()
             .persistent()
             .get(&DataKey::Balance(to.clone()))
             .unwrap_or(0);
 
-        from_balance -= amount;
-        to_balance += amount;
-
         env.storage()
             .persistent()
-            .set(&DataKey::Balance(from.clone()), &from_balance);
+            .set(&DataKey::Balance(from.clone()), &(from_balance - amount));
         env.storage()
             .persistent()
-            .set(&DataKey::Balance(to.clone()), &to_balance);
+            .set(&DataKey::Balance(to.clone()), &(to_balance + amount));
 
-        // Update rate limiting state
-        env.storage().persistent().set(
-            &DataKey::LastAction(from.clone()),
-            &env.ledger().timestamp(),
-        );
+        // Update last action timestamp
+        env.storage()
+            .persistent()
+            .set(&DataKey::LastAction(from), &env.ledger().timestamp());
 
         Ok(())
     }

@@ -5,7 +5,7 @@ edition = "2021"
 
 [lib]
 name = "events_structured"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 soroban-sdk = { workspace = true }

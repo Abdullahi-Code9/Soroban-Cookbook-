@@ -2,7 +2,6 @@
 
 **A comprehensive guide to building smart contracts on Stellar with Soroban**
 
-[![CI](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/ci.yml/badge.svg)](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/ci.yml)
 [![Test and Lint](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/test.yml/badge.svg)](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/test.yml)
 [![Security Audit](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/security-audit.yml/badge.svg)](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/security-audit.yml)
 [![codecov](https://codecov.io/gh/Soroban-Cookbook/Soroban-Cookbook-/branch/main/graph/badge.svg)](https://codecov.io/gh/Soroban-Cookbook/Soroban-Cookbook-)
@@ -141,11 +140,15 @@ Core Soroban concepts, one at a time.
 | [04-events](./examples/basics/04-events/) | `env.events().publish()`, topic design |
 | [05-auth-context](./examples/basics/05-auth-context/) | Cross-contract execution context |
 | [05-error-handling](./examples/basics/05-error-handling/) | Error enums, validation, propagation |
-| [06-soroban-types](./examples/basics/06-soroban-types/) | `Address`, `Symbol`, `Bytes`, `Map`, `Vec` |
 | [06-validation-patterns](./examples/basics/06-validation-patterns/) | Precondition checks, overflow-safe arithmetic |
-| [07-enum-types](./examples/basics/07-enum-types/) | `#[contracttype]` enums, role dispatch |
-| [08-custom-structs](./examples/basics/08-custom-structs/) | `#[contracttype]` structs, nested types |
-| [09-primitive-types](./examples/basics/09-primitive-types/) | `u32`, `u64`, `i128`, arithmetic safety |
+| [07-type-conversions](./examples/basics/07-type-conversions/) | `TryFromVal`, `IntoVal`, safe narrowing |
+| [08-soroban-types](./examples/basics/08-soroban-types/) | `Address`, `Symbol`, `Bytes`, `Map`, `Vec` |
+| [09-enum-types](./examples/basics/09-enum-types/) | `#[contracttype]` enums, role dispatch |
+| [10-custom-structs](./examples/basics/10-custom-structs/) | `#[contracttype]` structs, nested types |
+| [11-primitive-types](./examples/basics/11-primitive-types/) | `u32`, `u64`, `i128`, arithmetic safety |
+| [12-data-types](./examples/basics/12-data-types/) | Full type system reference |
+| [13-collection-types](./examples/basics/13-collection-types/) | `Vec`, `Map` collection patterns |
+| [14-event-filtering](./examples/basics/14-event-filtering/) | Indexer-friendly event topics |
 
 #### [Intermediate](./examples/intermediate/)
 

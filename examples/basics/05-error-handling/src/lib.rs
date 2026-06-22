@@ -122,6 +122,7 @@ impl ErrorDemoContract {
         if env.storage().instance().has(&DataKey::Admin) {
             panic!("contract already initialised");
         }
+
         env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage().instance().set(&DataKey::Paused, &false);
     }
@@ -223,6 +224,7 @@ impl ErrorDemoContract {
                 action: symbol_short!("withdraw"),
             },
         );
+
         Ok(new_balance)
     }
 
@@ -319,14 +321,6 @@ impl ErrorDemoContract {
             .instance()
             .get(&DataKey::Paused)
             .unwrap_or(false)
-    }
-
-    /// Converts lower-level math errors into contract-level errors.
-    pub fn divide_with_conversion(a: i128, b: i128) -> Result<i128, ContractError> {
-        if b == 0 {
-            return Err(ContractError::ZeroAmount);
-        }
-        Ok(a / b)
     }
 }
 
