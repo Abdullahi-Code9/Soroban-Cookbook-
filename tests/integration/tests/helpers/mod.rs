@@ -3,7 +3,9 @@
 //! Reusable test infrastructure for Soroban Cookbook integration tests.
 //! Provides environment setup, contract registration, and assertion helpers.
 
-use soroban_sdk::{testutils::Address as _, testutils::Ledger as _, Address, Env, IntoVal, Symbol, Vec};
+use soroban_sdk::{
+    testutils::Address as _, testutils::Ledger as _, Address, Env, IntoVal, Symbol, Vec,
+};
 
 // ---------------------------------------------------------------------------
 // Environment Setup
@@ -38,6 +40,7 @@ pub fn generate_addresses(env: &Env, count: usize) -> std::vec::Vec<Address> {
 // ---------------------------------------------------------------------------
 
 /// Invoke a contract function with no arguments and return the result.
+#[allow(dead_code)]
 pub fn invoke_no_args<T: soroban_sdk::TryFromVal<Env, soroban_sdk::Val>>(
     env: &Env,
     contract_id: &Address,
@@ -47,6 +50,7 @@ pub fn invoke_no_args<T: soroban_sdk::TryFromVal<Env, soroban_sdk::Val>>(
 }
 
 /// Invoke a contract function with a single argument.
+#[allow(dead_code)]
 pub fn invoke_one_arg<T, A>(env: &Env, contract_id: &Address, fn_name: &str, arg: A) -> T
 where
     T: soroban_sdk::TryFromVal<Env, soroban_sdk::Val>,
@@ -77,9 +81,13 @@ pub fn assert_balance(env: &Env, auth_contract: &Address, user: &Address, expect
 }
 
 /// Assert that a counter contract has a specific count.
+#[allow(dead_code)]
 pub fn assert_event_count(env: &Env, events_contract: &Address, expected: u32) {
-    let actual: u32 =
-        env.invoke_contract(events_contract, &Symbol::new(env, "get_number"), Vec::new(env));
+    let actual: u32 = env.invoke_contract(
+        events_contract,
+        &Symbol::new(env, "get_number"),
+        Vec::new(env),
+    );
     assert_eq!(
         actual, expected,
         "Event count mismatch: expected {expected}, got {actual}"
@@ -91,6 +99,7 @@ pub fn assert_event_count(env: &Env, events_contract: &Address, expected: u32) {
 // ---------------------------------------------------------------------------
 
 /// Standard test fixture: auth contract initialized with admin + funded users.
+#[allow(dead_code)]
 pub struct AuthFixture {
     pub contract_id: Address,
     pub admin: Address,

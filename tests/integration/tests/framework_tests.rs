@@ -62,10 +62,16 @@ fn test_fixture_storage_patterns() {
     let storage = helpers::StorageFixture::setup(&env);
 
     storage.set_persistent(&env, symbol_short!("key1"), 42);
-    assert_eq!(storage.get_persistent(&env, symbol_short!("key1")), Some(42));
+    assert_eq!(
+        storage.get_persistent(&env, symbol_short!("key1")),
+        Some(42)
+    );
 
     storage.set_persistent(&env, symbol_short!("key1"), 100);
-    assert_eq!(storage.get_persistent(&env, symbol_short!("key1")), Some(100));
+    assert_eq!(
+        storage.get_persistent(&env, symbol_short!("key1")),
+        Some(100)
+    );
 }
 
 #[test]
@@ -95,7 +101,10 @@ fn test_combined_fixtures_workflow() {
 
     // Track in storage
     storage.set_persistent(&env, symbol_short!("tx_count"), 1);
-    assert_eq!(storage.get_persistent(&env, symbol_short!("tx_count")), Some(1));
+    assert_eq!(
+        storage.get_persistent(&env, symbol_short!("tx_count")),
+        Some(1)
+    );
     assert_eq!(events.get_count(&env), 1);
 }
 
@@ -326,7 +335,10 @@ fn test_setup_teardown_storage_reset() {
 
     // Setup: populate storage
     storage.set_persistent(&env, symbol_short!("count"), 10);
-    assert_eq!(storage.get_persistent(&env, symbol_short!("count")), Some(10));
+    assert_eq!(
+        storage.get_persistent(&env, symbol_short!("count")),
+        Some(10)
+    );
 
     // Simulate teardown: remove the key
     env.invoke_contract::<()>(

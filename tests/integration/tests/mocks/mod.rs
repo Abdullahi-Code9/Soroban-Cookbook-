@@ -113,8 +113,10 @@ impl MockOracle {
         env.storage()
             .persistent()
             .set(&OracleKey::Price(asset.clone()), &price);
-        env.events()
-            .publish((symbol_short!("oracle"), symbol_short!("price")), (asset, price));
+        env.events().publish(
+            (symbol_short!("oracle"), symbol_short!("price")),
+            (asset, price),
+        );
     }
 
     pub fn get_price(env: Env, asset: Symbol) -> Option<i128> {
